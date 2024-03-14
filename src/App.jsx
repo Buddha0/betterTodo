@@ -98,8 +98,8 @@ function App() {
   
   return (
     <>
-      <section className=" flex w-full min-h-screen  items-center justify-center bg-[#0D202D] max-[500px]:bg-black max-[500px]:block">
-        <div className="shadow-md p-4 bg-[#283643] text-white min-h-[500px] rounded-sm w-[400px] max-[500px]:min-h-screen max-[500px]:w-full">
+      <section className=" flex w-[100%] min-h-screen  items-center justify-center bg-[#0D202D] max-[500px]:bg-black max-[500px]:block">
+        <div className="shadow-md p-4 bg-[#283643] text-white min-h-[500px] rounded-sm w-[400px] max-[500px]:min-h-screen max-[500px]:w-[100%]">
           <h1 className="text-2xl pt-2 pb-2 border-white">Todos</h1>
           <form onSubmit={formSubmit} className="mb-3">
             <input
@@ -119,9 +119,10 @@ function App() {
           
           </div>
 
-          {todos.map((todo,index) => (
+          {todos.length>0?todos.map((todo,index) => (
+            
            <Todo todo = {todo} toggleCompleted = {toggleCompleted} editTodos = {editTodos} deleteTodo = {deleteTodo} key = {index}/>
-          ))}
+          )):<p className="text-red-500">No Task here yet</p>}
         </div>
       </section>
     </>
