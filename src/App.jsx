@@ -42,6 +42,7 @@ function App() {
     setOriginalTodos([...originalTodos, newTodo]);
     setId(id + 1); //incrementing the id
     setInputValue("");
+    setActiveBtn("All")
   }
 
 
