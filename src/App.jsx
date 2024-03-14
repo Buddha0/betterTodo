@@ -99,7 +99,7 @@ function App() {
   return (
     <>
       <section className=" flex w-full min-h-screen  items-center justify-center bg-[#0D202D] max-[500px]:bg-black max-[500px]:block">
-        <div className="shadow-md w-full p-4 bg-[#283643] text-white min-h-[500px] rounded-sm sm:w-[400px] max-[500px]:min-h-screen">
+        <div className="shadow-md p-4 bg-[#283643] text-white min-h-[500px] rounded-sm w-[400px] max-[500px]:min-h-screen max-[500px]:w-full">
           <h1 className="text-2xl pt-2 pb-2 border-white">Todos</h1>
           <form onSubmit={formSubmit} className="mb-3">
             <input
