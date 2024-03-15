@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 
+
 import FilterButton from "./components/filterButtons";
 import Todo from "./components/todo";
+import { v4 as uuidv4 } from "uuid"; 
 
 function App() {
   const [originalTodos, setOriginalTodos] = useState([]); //contains all the todos
   const [todos, setTodos] = useState([]); //also contains all the todos but will change when filtering by status(completed|todo|all)
   const [inputValue, setInputValue] = useState("");
-  const [id, setId] = useState(1); //id for the todos
   const [activeBtn, setActiveBtn] = useState("All"); //setting the btn active to change the btn bg
 
 
@@ -34,13 +35,12 @@ function App() {
 
     const newTodo = {
       todo: inputValue,
-      todoId: id,
+      todoId: uuidv4(),
       completed: false, 
     };
 
     setTodos([...todos, newTodo]);
     setOriginalTodos([...originalTodos, newTodo]);
-    setId(id + 1); //incrementing the id
     setInputValue("");
     setActiveBtn("All")
   }
