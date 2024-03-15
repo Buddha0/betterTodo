@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-
 import FilterButton from "./components/filterButtons";
 import Todo from "./components/todo";
 import { v4 as uuidv4 } from "uuid";
 
 function App() {
-  const [originalTodos, setOriginalTodos] = useState([]); //contains all the todos
-  const [todos, setTodos] = useState([]); //also contains all the todos but will change when filtering by status(completed|todo|all)
+  const [todos, setTodos] = useState([]); //contains all the todos
+  const [filteredTodos, setFilteredTodos] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [activeBtn, setActiveBtn] = useState("All"); //setting the btn active to change the btn bg
 
@@ -15,18 +14,21 @@ function App() {
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem("todos"));
     if (storedTodos && storedTodos.length > 0) {
-      setTodos(storedTodos);
-      setOriginalTodos(storedTodos)
+
+      setTodos(storedTodos)
     }
   }, []);
 
 
 //setting in local storage if there is any change in the orignalTodos
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(originalTodos));
-  }, [originalTodos]);
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
 
+  useEffect(() => {
+    filterByStatus(activeBtn);
+  }, [activeBtn,todos]);
 
 //adding the todos
   function formSubmit(e) {
@@ -38,8 +40,8 @@ function App() {
       completed: false, 
     };
 
+ 
     setTodos([...todos, newTodo]);
-    setOriginalTodos([...originalTodos, newTodo]);
     setInputValue("");
     setActiveBtn("All")
   }
@@ -47,9 +49,7 @@ function App() {
 
   //deleting
   function deleteTodo(id) {
-    const newTodo = todos.filter((todo) => todo.todoId !== id);
-    setTodos(newTodo);
-    setOriginalTodos(originalTodos.filter((todo) => todo.todoId !== id));
+    setTodos(todos.filter((todo) => todo.todoId !== id));
   }
 
   //editing
@@ -62,7 +62,7 @@ function App() {
       return todo;
     });
     setTodos(updatedTodos);
-    setOriginalTodos(updatedTodos);
+ 
   }
 
   //toggling if the task is completed or not
@@ -72,28 +72,18 @@ function App() {
     );
     setTodos(updatedTodos);
   
-    const updatedOriginalTodos = originalTodos.map((todo) =>
-      todo.todoId === todoId ? { ...todo, completed: !todo.completed } : todo
-    );
-    setOriginalTodos(updatedOriginalTodos);
+   
   }
 
   //filtering the todos by their status(completed|todo|all)
-  function filterByStatus(status){
-    if(status === "Completed"){
-      setActiveBtn("Completed");
-      const completedTasks = originalTodos.filter((todo) => todo.completed);
-      setTodos(completedTasks);
-    }
-    else if(status === "Todo"){
-      setActiveBtn("Todo");
-      const unCompletedTasks = originalTodos.filter((todo) => !todo.completed);
-      setTodos(unCompletedTasks);
-    }
-
-    else if(status === "All"){
-      setActiveBtn("All");
-      setTodos(originalTodos);
+  function filterByStatus(status) {
+    setActiveBtn(status);
+    if (status === "Completed") {
+      setFilteredTodos(todos.filter((todo) => todo.completed));
+    } else if (status === "Todo") {
+      setFilteredTodos(todos.filter((todo) => !todo.completed));
+    } else if (status === "All") {
+      setFilteredTodos(todos);
     }
   }
 
@@ -122,10 +112,19 @@ function App() {
           
           </div>
 
-          {todos.length>0?todos.map((todo,index) => (
-            
-           <Todo todo = {todo} toggleCompleted = {toggleCompleted} editTodos = {editTodos} deleteTodo = {deleteTodo} key = {index}/>
-          )):<p className="text-red-500">No Task here yet</p>}
+          {filteredTodos.length > 0 ? (
+            filteredTodos.map((todo, index) => (
+              <Todo
+                key={index}
+                todo={todo}
+                toggleCompleted={toggleCompleted}
+                editTodos={editTodos}
+                deleteTodo={deleteTodo}
+              />
+            ))
+          ) : (
+            <p className="text-red-500">No Task here yet</p>
+          )}
         </div>
       </section>
     </>
