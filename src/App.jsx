@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-
 import FilterButton from "./components/filterButtons";
 import Todo from "./components/todo";
-import { v4 as uuidv4 } from "uuid"; 
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [originalTodos, setOriginalTodos] = useState([]); //contains all the todos
@@ -72,7 +71,11 @@ function App() {
       todo.todoId === todoId ? { ...todo, completed: !todo.completed } : todo
     );
     setTodos(updatedTodos);
-    setOriginalTodos(updatedTodos);
+  
+    const updatedOriginalTodos = originalTodos.map((todo) =>
+      todo.todoId === todoId ? { ...todo, completed: !todo.completed } : todo
+    );
+    setOriginalTodos(updatedOriginalTodos);
   }
 
   //filtering the todos by their status(completed|todo|all)
